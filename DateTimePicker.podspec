@@ -4,16 +4,13 @@ Pod::Spec.new do |s|
   s.summary          = 'A collection of customizable Date and Time Picker components.'
   
   s.description      = <<-DESC
-StatefulUIComponents provides:
-- @IBDesignable StatefulUIButton with state-specific properties
-- PlaceholderTextView with customizable placeholder
-- Powerful IBInspectable extensions for all UIView subclasses
-                       DESC
+DateTimePicker provides:
+- @IBDesignable DateTimePicker with state-specific properties
 
-  s.homepage         = 'https://github.com/lsn21/StatefulUIComponents'
+  s.homepage         = 'https://github.com/lsn21/DateTimePicker'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Sergey Lukyanov' => 'lsn21@ya.ru' }
-  s.source           = { :git => 'https://github.com/lsn21/StatefulUIComponents.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/lsn21/DateTimePicker.git', :tag => s.version.to_s }
   
   s.ios.deployment_target = '15.0'
   s.swift_version = '5.0'
