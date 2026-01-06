@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DateTimePicker'
-  s.version          = '1.2.1' # Обновите версию
+  s.version          = '1.0.0' # Обновите версию
   s.summary          = 'A collection of customizable Date and Time Picker components.'
   
   s.description      = <<-DESC
