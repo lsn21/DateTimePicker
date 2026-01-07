@@ -1,11 +1,12 @@
 Pod::Spec.new do |s|
   s.name             = 'DateTimePicker'
   s.version          = '1.0.0' # Обновите версию
-  s.summary          = 'A collection of customizable Date and Time Picker components.'
+  s.summary          = 'Date and Time Picker components.'
   
   s.description      = <<-DESC
 DateTimePicker provides:
 - @IBDesignable DateTimePicker with state-specific properties
+                       DESC
 
   s.homepage         = 'https://github.com/lsn21/DateTimePicker'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
