@@ -12,6 +12,7 @@ public class BasePickerViewController: UIViewController {
     @IBInspectable public var toolbarBackgroundColor: UIColor? {
         didSet {
             toolbar.backgroundColor = toolbarBackgroundColor
+            toolbarContainerView.backgroundColor = toolbarBackgroundColor
         }
     }
     
@@ -27,13 +28,44 @@ public class BasePickerViewController: UIViewController {
         }
     }
     
-    @IBInspectable public var buttonTintColor: UIColor? {
+    @IBInspectable public var cancelButtonTextColor: UIColor? {
         didSet {
             updateButtonColors()
         }
     }
     
+    @IBInspectable public var doneButtonTextColor: UIColor? {
+        didSet {
+            updateButtonColors()
+        }
+    }
+
+    @IBInspectable public var cancelButtonTintColor: UIColor? {
+        didSet {
+            updateButtonColors()
+        }
+    }
+    
+    @IBInspectable public var doneButtonTintColor: UIColor? {
+        didSet {
+            updateButtonColors()
+        }
+    }
+
+    /// Высота тулбара в пунктах. По умолчанию 44.
+    public var toolbarHeight: CGFloat = 44 {
+        didSet {
+            toolbarHeightConstraint?.constant = toolbarHeight
+        }
+    }
+
     // MARK: - UI Properties
+    private let toolbarContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+
     private let toolbar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.barStyle = .default
@@ -60,6 +92,7 @@ public class BasePickerViewController: UIViewController {
     }()
     
     private var pickerView: UIView?
+    private var toolbarHeightConstraint: NSLayoutConstraint?
     
     // MARK: - Lifecycle
     public override func viewDidLoad() {
@@ -79,10 +112,11 @@ public class BasePickerViewController: UIViewController {
         
         // Применяем цвета по умолчанию, если не установлены через IB
         if toolbarBackgroundColor == nil {
-            toolbar.backgroundColor = UIColor(red: 195.0/255.0, green: 195.0/255.0, blue: 195.0/255.0, alpha: 1.0)
+            toolbar.backgroundColor = UIColor.clear
         } else {
             toolbar.backgroundColor = toolbarBackgroundColor
         }
+        toolbarContainerView.backgroundColor = toolbar.backgroundColor
         
         if containerBackgroundColor == nil {
             containerView.backgroundColor = .white
@@ -102,7 +136,8 @@ public class BasePickerViewController: UIViewController {
         
         // Контейнер для пикера и тулбара
         view.addSubview(containerView)
-        containerView.addSubview(toolbar)
+        containerView.addSubview(toolbarContainerView)
+        toolbarContainerView.addSubview(toolbar)
         
         // Настройка констрейнтов для контейнера
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,12 +147,23 @@ public class BasePickerViewController: UIViewController {
             containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        // Настройка констрейнтов для тулбара
+        // Контейнер тулбара (настраиваемая высота)
+        toolbarContainerView.translatesAutoresizingMaskIntoConstraints = false
+        let containerHeightConstraint = toolbarContainerView.heightAnchor.constraint(equalToConstant: toolbarHeight)
+        toolbarHeightConstraint = containerHeightConstraint
+        NSLayoutConstraint.activate([
+            toolbarContainerView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            toolbarContainerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            toolbarContainerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            containerHeightConstraint
+        ])
+        
+        // Тулбар по центру контейнера по высоте (фиксированная высота бара с кнопками)
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            toolbar.topAnchor.constraint(equalTo: containerView.topAnchor),
-            toolbar.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            toolbar.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            toolbar.centerYAnchor.constraint(equalTo: toolbarContainerView.centerYAnchor),
+            toolbar.leadingAnchor.constraint(equalTo: toolbarContainerView.leadingAnchor),
+            toolbar.trailingAnchor.constraint(equalTo: toolbarContainerView.trailingAnchor),
             toolbar.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
@@ -178,8 +224,13 @@ public class BasePickerViewController: UIViewController {
             target: self,
             action: cancelSelector
         )
-        cancelButton.tintColor = buttonTintColor ?? UIColor(named: "GreenTextColorL164")
-        
+        let cancelTitleColor = cancelButtonTextColor ?? UIColor.darkGray
+        let cancelAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.foregroundColor: cancelTitleColor]
+        cancelButton.setTitleTextAttributes(cancelAttributes, for: .normal)
+
+        cancelButton.tintColor = cancelButtonTintColor ?? UIColor.systemGray
+
         let flexSpace = UIBarButtonItem(
             barButtonSystemItem: .flexibleSpace,
             target: nil,
@@ -192,7 +243,13 @@ public class BasePickerViewController: UIViewController {
             target: self,
             action: doneSelector
         )
-        doneButton.tintColor = buttonTintColor ?? UIColor(named: "GreenTextColorL164")
+        let doneTitleColor = doneButtonTextColor ?? UIColor.white
+        print(doneTitleColor)
+        let doneAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.foregroundColor: doneTitleColor]
+
+        doneButton.tintColor = doneButtonTintColor ?? UIColor.systemBlue
+        doneButton.setTitleTextAttributes(doneAttributes, for: .normal)
 
         toolbar.items = [cancelButton, flexSpace, doneButton]
     }
@@ -201,7 +258,7 @@ public class BasePickerViewController: UIViewController {
         guard let items = toolbar.items else { return }
         for item in items {
             if item.title == "Cancel" || item.title == "Done" {
-                item.tintColor = buttonTintColor ?? UIColor(named: "GreenTextColorL164")
+                item.tintColor = doneButtonTintColor ?? UIColor.systemRed
             }
         }
     }
@@ -212,7 +269,7 @@ public class BasePickerViewController: UIViewController {
         picker.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            picker.topAnchor.constraint(equalTo: toolbar.bottomAnchor),
+            picker.topAnchor.constraint(equalTo: toolbarContainerView.bottomAnchor),
             picker.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             picker.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             picker.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),

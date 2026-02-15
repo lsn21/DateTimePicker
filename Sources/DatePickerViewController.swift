@@ -18,6 +18,9 @@ public class DatePickerViewController: BasePickerViewController {
     
     var date: Date?
     
+    /// Локаль (язык) пикера даты. По умолчанию текущая локаль устройства.
+    public var locale: Locale = .current
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupDatePicker()
@@ -33,6 +36,7 @@ public class DatePickerViewController: BasePickerViewController {
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.backgroundColor = UIColor.white.withAlphaComponent(0.8)
         datePicker.date = date ?? Date()
+        datePicker.locale = locale
         
         addPickerToContainer(datePicker)
     }
