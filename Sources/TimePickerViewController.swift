@@ -47,6 +47,10 @@ public class TimePickerViewController: BasePickerViewController {
         dismiss(animated: true)
     }
     
+    override func onWillDismissFromBackgroundTap() {
+        delegate?.timePickerCancelled()
+    }
+
     @objc private func cancelButtonTapped() {
         delegate?.timePickerCancelled()
         dismiss(animated: true)

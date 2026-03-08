@@ -46,6 +46,10 @@ public class DatePickerViewController: BasePickerViewController {
         dismiss(animated: true)
     }
     
+    override func onWillDismissFromBackgroundTap() {
+        delegate?.datePickerCancelled()
+    }
+
     @objc private func cancelButtonTapped() {
         delegate?.datePickerCancelled()
         dismiss(animated: true)

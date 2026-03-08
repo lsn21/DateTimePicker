@@ -203,7 +203,7 @@ public class BasePickerViewController: UIViewController {
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
                 self.containerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height)
             } completion: { _ in
-                completion?()
+                super.dismiss(animated: false, completion: completion)
             }
         }
     }
@@ -212,9 +212,13 @@ public class BasePickerViewController: UIViewController {
     @objc private func handleBackgroundTap(_ gesture: UITapGestureRecognizer) {
         let location = gesture.location(in: view)
         if !containerView.frame.contains(location) {
+            onWillDismissFromBackgroundTap()
             dismiss(animated: true, completion: nil)
         }
     }
+    
+    /// Вызывается перед dismiss при тапе вне окна пикера. Переопределить в подклассах для вызова delegate.
+    func onWillDismissFromBackgroundTap() {}
     
     // MARK: - Public Methods
     func setupToolbarItems(cancelSelector: Selector, doneSelector: Selector) {
