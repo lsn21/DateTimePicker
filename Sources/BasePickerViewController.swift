@@ -228,12 +228,12 @@ public class BasePickerViewController: UIViewController {
             target: self,
             action: cancelSelector
         )
-        let cancelTitleColor = cancelButtonTextColor ?? UIColor.darkGray
+        let cancelTitleColor = cancelButtonTextColor ?? UIColor.systemRed
         let cancelAttributes: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.foregroundColor: cancelTitleColor]
         cancelButton.setTitleTextAttributes(cancelAttributes, for: .normal)
 
-        cancelButton.tintColor = cancelButtonTintColor ?? UIColor.systemGray
+        cancelButton.tintColor = cancelButtonTintColor ?? UIColor.systemRed
 
         let flexSpace = UIBarButtonItem(
             barButtonSystemItem: .flexibleSpace,
@@ -247,7 +247,7 @@ public class BasePickerViewController: UIViewController {
             target: self,
             action: doneSelector
         )
-        let doneTitleColor = doneButtonTextColor ?? UIColor.white
+        let doneTitleColor = doneButtonTextColor ?? UIColor.systemBlue
         print(doneTitleColor)
         let doneAttributes: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.foregroundColor: doneTitleColor]
